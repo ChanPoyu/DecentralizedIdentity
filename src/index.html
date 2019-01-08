@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <link href="https://fonts.googleapis.com/css?family=Acme" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css"/>
+
+  </head>
+  <body>
+    
+    <div id="loader">
+      <div class="lds-ellipsis">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+
+    <div id="overlay"></div>
+    
+    <div id="IdentityFormContainer">
+      <div id="IdentityForm">
+        Your Name   <input type="text" id="IdName">
+        <br>
+        <div id="errorMsg"><p>Input Your Name!!</p></div>
+        <div id="idFormBtn">Add Identity</div>
+      </div>
+    </div>
+    
+
+    <div id="topArea">
+      <div id="networkDisplay">
+        <p>Current Network:</p>
+        <p>{{network}}</p>
+      </div>
+      <div id="diplayAccount">
+        <p>Your Account:</p>
+        <p>{{ethAccount}}</p>
+      </div>  
+    </div>
+
+    <div id="IdBlock">
+      <h3>Your Identities</h3>
+      <div id="idArray">
+        <!-- <div class="idThumbnail" id="dipsy" onclick="IdThumbnailClicked(this)"><div>Dipsy</div></div> -->
+        <div class="addId" id="addIdBtn"><div><img src="images/fingerPrint.png" height="40"></div></div>
+      </div>
+    </div>
+
+    <div id="keyAndClaimHolder">
+      <div id="keyHolder">
+        <div id="keyHolderNameTag">
+          <div><h3>Keys</h3></div>
+          <div id="addKeyBtn"><h3>Add&#43;</h3></div> 
+        </div>    
+        <div id="displayKeys"></div>
+      </div>
+      <div id="ClaimHolder">
+        <div id="claimHolderNameTag">
+          <div><h3>Claims</h3></div>
+          <div id="addClaimBtn"><h3>Add &#43;</h3></div>
+        </div>
+        <div id="displayClaims"></div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

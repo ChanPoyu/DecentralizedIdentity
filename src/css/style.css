@@ -1,0 +1,221 @@
+
+body {
+	font-family: 'Acme', sans-serif;
+	margin: 0;
+	padding: 0;
+	background: #003A7C;
+}
+
+p {
+	margin: 0;
+	font-size: 20px;
+}
+#IdentityFormContainer {
+	display: none;
+	position: absolute;
+	top: 40%;
+	left: 35%;
+	width: 30%;
+	height: 200px;
+	background: #008E97;
+	z-index: 2;
+}
+#IdentityForm {
+	width: 280px;
+	height: 50%;
+	margin: auto;
+	text-align: center;
+	
+}
+#errorMsg {
+	display: none;
+	color: red;
+	text-align: center;
+}
+
+#idFormBtn {
+	transform: translate(0,40px);
+	width: 50%;
+	/*height: 30px;*/
+	margin: auto;
+	top: 30%;
+	text-align: center;
+	background: #BBE69B;
+}
+
+#overlay {
+	display: none;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.4);
+	z-index: 1;
+}
+
+#topArea {
+	padding: 50px 0 30px 0;
+	display: block;
+	color: #fff;
+}
+
+#networkDisplay {
+	display: block;
+	width: 500px;
+	height: 80px;
+	margin: auto;
+	text-align: center;
+}
+
+#diplayAccount {
+	display: block;
+	width: 500px;
+	height: 80px;
+	margin: auto;
+	text-align: center;
+}
+
+#IdBlock {
+	width: 70%;
+	padding: 10px 15px;
+	height: 160px;
+	margin: auto;
+	background: #fff;
+	border-radius: 5px;
+}
+
+#idArray {
+	width: 100%;
+	display: flex;
+	overflow: scroll;
+}
+
+.idThumbnail > div {
+	display: flex;
+	box-sizing: border-box;
+	margin: 5px;
+	width: 80px;
+	height: 80px;
+	color: #fff;
+	background: #ccc;
+	justify-content: center;
+	align-items: center;
+	border-radius: 3px;
+
+}
+
+.idThumbnail > div:hover {
+	background: #bcd;
+}
+
+.addId > div{
+	box-sizing: border-box;
+	display: flex;
+	margin: 5px;
+	width: 80px;
+	height: 80px;
+	color: #fff;
+	background: #ccc;
+	justify-content: center;
+	align-items: center;
+	border-radius: 3px;
+}
+
+.addId > div:hover {
+	background: #bcd;	
+}
+
+#keyAndClaimHolder {
+	display: flex;
+	padding: 30px 30px 10px 30px;
+	justify-content: space-around;
+	align-items: center;
+}
+#keyHolder, #ClaimHolder {
+	width: 45%;
+}
+
+#keyHolderNameTag, #claimHolderNameTag {
+	display: flex;
+	justify-content: space-between;
+	color: #fff;
+}
+
+#addKeyBtn:hover, #addClaimBtn:hover {
+	color: #390;
+}
+
+#displayKeys, #displayClaims {
+	width: 100%;
+	height: 200px;
+	background: #fff;
+	border-radius: 5px;
+}
+
+/**************************loader***********************/
+#loader {
+	position: absolute;
+	display: none;
+	width: 100%;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.5);
+	
+}
+
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 27px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 6px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 6px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 26px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 45px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(19px, 0);
+  }
+}
+/**************************loader***********************/
