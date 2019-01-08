@@ -125,6 +125,7 @@ App = {
     $("#addIdBtn").click(App.handleAddIdBtn);
     $("#overlay").click(App.overlayClicked);
     $("#idFormBtn").click(App.SendIdForm);
+    $("#sayHello").click(App.SayHello)
   },
 
   handleAddIdBtn: function() {
@@ -143,18 +144,38 @@ App = {
     var claimHolderFactoryInstance;
     var name = $("#IdName").val();
     $("#IdName").val("");
+    $("#IdentityFormContainer").css("display", "none");
+    $("#overlay").css("display", "none");
 
     if(!name){
       console.log("input your name!")
       $("#errorMsg").css("display", "block");
     }else{
+      $("#loader").css("display", "flex");
       App.contracts.ClaimHolderFactory.deployed().then(function(instance){
         claimHolderFactoryInstance = instance;
         return claimHolderFactoryInstance.createClaimHolder();
-      }).then(function(receipt){
-        console.log(receipt);
+      }).then(function(result){
+        console.log("claimHolder address:" + result.receipt.logs[0].address);
+        console.log("Management key:" + result.receipt.logs[0].topics[1]);
+        $("#loader").css("display", "none");
+      }).catch(function(err){
+        console.log(err);
+        $("#loader").css("display", "none");
       });
     }
+  },
+
+  SayHello: function() {
+
+    $.ajax({
+      url: "https://small-obi-1179.lolipop.io/sayHello",
+      type: "GET",
+      dataType: 'json',
+      success: function(data){
+        console.log(data);
+      }
+    });
   }
 
 };
