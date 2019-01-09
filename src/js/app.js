@@ -2,6 +2,8 @@ App = {
   web3Provider: null,
   contracts: {},
   account: '0x0',
+  network: '',
+  serverDomain: 'https://small-obi-1179.lolipop.io/',
 
   init: async function() {
     
@@ -27,6 +29,11 @@ App = {
       App.contracts.ClaimHolderFactory.setProvider(App.web3Provider);
     });
 
+    $.getJSON("ClaimHolder.json", function(claimHolder){
+      App.contracts.ClaimHolder = TruffleContract(claimHolder);
+      App.contracts.ClaimHolder.setProvider(App.web3Provider);
+    });
+
     return App.render();
   },
 
@@ -34,12 +41,10 @@ App = {
 
     var networkId = parseInt(web3.currentProvider.networkVersion);
     
-    
-    
     if(networkId){
       switch (networkId) {
         case 1:
-          network = 'mainnet';
+          App.network = 'mainnet';
           var networkDisplay = new Vue({
             el: '#networkDisplay',
             data: {network: 'Mainnet'}
@@ -47,7 +52,7 @@ App = {
           
           break
         case 3:
-          network = 'ropsten';
+          App.network = 'ropsten';
           var networkDisplay = new Vue({
             el: '#networkDisplay',
             data: {network: 'Ropsten'}
@@ -55,21 +60,21 @@ App = {
           
           break
         case 4:
-        network = 'rinkeby';
+          App.network = 'rinkeby';
           var networkDisplay = new Vue({
             el: '#networkDisplay',
             data: {network: 'Rinkeby'}
           });
           break
         case 42:
-          network = 'kovan';
+          App.network = 'kovan';
           var networkDisplay = new Vue({
             el: '#networkDisplay',
             data: {network: 'Kovan'}
           });
             break
         default:
-          network = 'localhost';
+          App.network = 'localhost';
           var networkDisplay = new Vue({
             el: '#networkDisplay',
             data: {network: 'localhost'}
@@ -100,24 +105,22 @@ App = {
         }
       }
     });
-    // .then(function(){
-    //   var url = '/getIdentityByEthAccount/' + network + '/' + account;
-
-    //   $.ajax({
-    //     url: url,
-    //     type: 'GET',
-    //     success: (data) => {
-    //       for(var i = 0; i < data.length; i ++){
-    //         var name = data[i].identity.name;
-    //         var id = data[i]._id;
-    //         var thumbnail = `<div class="idThumbnail" id="${id}" onclick="IdThumbnailClicked(this)"><div>${name}</div></div>`;
-    //         $("#idArray").prepend(thumbnail);
-    //       }
-    //     }
-    //   });
-
-    // });
-
+    
+    var url = App.serverDomain + 'getIdentityByEthAccount/' + App.network + '/' + web3.eth.coinbase;
+    
+    $.ajax({
+      url: url,
+      type: 'GET',
+      success: (data) => {
+        for(var i = 0; i < data.length; i ++){
+          var name = data[i].identity.name;
+          var id = data[i]._id;
+          var thumbnail = `<div class="idThumbnail" id="${id}" onclick="App.IdThumbnailClicked(this)"><div>${name}</div></div>`;
+          $("#idArray").prepend(thumbnail);
+        }
+      }
+    });    
+    
     return App.bindEvents();
   },
 
@@ -125,7 +128,9 @@ App = {
     $("#addIdBtn").click(App.handleAddIdBtn);
     $("#overlay").click(App.overlayClicked);
     $("#idFormBtn").click(App.SendIdForm);
-    $("#sayHello").click(App.SayHello)
+    $(".idThumbnail").cli
+    // $("#sayHello").click(App.SayHello);
+
   },
 
   handleAddIdBtn: function() {
@@ -158,6 +163,32 @@ App = {
       }).then(function(result){
         console.log("claimHolder address:" + result.receipt.logs[0].address);
         console.log("Management key:" + result.receipt.logs[0].topics[1]);
+
+        var claimHolderAddress = result.receipt.logs[0].address;
+        var IDdata = {
+          "network": App.network,
+          "ethAccount": web3.eth.coinbase,
+          "identity": {
+            "name": name,
+            "claimHolderAddr": claimHolderAddress
+          }
+        };
+
+        var url = App.serverDomain + 'storeId2DB';
+
+        $.ajax({
+          url: url,
+          type: 'POST',
+          data: IDdata,
+          success: (result) => {
+            var _id = result.createdId._id;
+            var thumbnail = `<div class="idThumbnail" id="${_id}" onclick="App.IdThumbnailClicked(this)"><div>${name}</div></div>`;
+            $("#idArray").prepend(thumbnail);
+
+            return 
+          }
+        });
+
         $("#loader").css("display", "none");
       }).catch(function(err){
         console.log(err);
@@ -166,10 +197,30 @@ App = {
     }
   },
 
-  SayHello: function() {
+  IdThumbnailClicked: function(e){
+    var id = e.id;
+    var url = App.serverDomain + 'getDatasbyObjectId/' + id;
 
     $.ajax({
-      url: "https://small-obi-1179.lolipop.io/sayHello",
+      url: url,
+      type: 'GET',
+      success: (data) => {
+        var claimHolderAddress = data.identity.claimHolderAddr;
+
+        var claimHolderInstance = App.contracts.ClaimHolder.at(claimHolderAddress);
+
+        claimHolderInstance.getKeysByPurpose(1).then(res => console.log(res));
+        // console.log(claimHolderInstance);
+      }
+    });
+
+  },
+
+  SayHello: function() {
+
+    var url = App.serverDomain + 'sayHello';
+    $.ajax({
+      url: url,
       type: "GET",
       dataType: 'json',
       success: function(data){
@@ -177,6 +228,7 @@ App = {
       }
     });
   }
+
 
 };
 
