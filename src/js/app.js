@@ -210,6 +210,7 @@ App = {
     $("#" + App.choosedThumbnail).css("background", "#ccddee");
 
     $("#keyTable").html("");
+    $("#claimTable").html("");
 
     $.ajax({
       url: url,
@@ -318,22 +319,41 @@ App = {
       $("#overlay").css("display", "block");  
     }
     
-    console.log("clicked");
   },
 
   SendKeyForm: function(){
 
+    
+    $("#KeyFormContainer").css("display", "none");
+    $("#overlay").css("display", "none");
+    $("#loader").css("display", "flex");
+    
     var keyPurpose = parseInt($("#keyPurposeSelect").val());
     var keyType = parseInt($("#keyTypeSelect").val());
     var key = $("#keyData").val();
 
     if(key == ""){
       console.log("input keyData!");
+      $("#loader").css("display", "none");
     }else{
+      $("#keyData").val("");
       console.log(App.claimHolderAddress);
       var ClaimHolderInstance = App.contracts.ClaimHolder.at(App.claimHolderAddress);
 
-      ClaimHolderInstance.addKey(web3.fromAscii($("#keyData").val()), keyPurpose, keyType).then((res) => {console.log(res.logs)});
+      ClaimHolderInstance.addKey(web3.fromAscii(key), keyPurpose, keyType).then((res) => {
+        console.log(res);
+        var newKey = res.logs[0].args.key;
+        var content = 
+              `<tr class="keyRow">
+                <td class="keyData">${newKey}</td>
+              </tr>`;
+
+            $("#keyTable").prepend(content);
+        $("#loader").css("display", "none");
+      }).catch((err) => {
+        console.log(err);
+        $("#loader").css("display", "none");
+      });
 
     }
 
@@ -352,6 +372,11 @@ App = {
   SendClaimForm: function(){
     
     var data = $("#dataData").val();
+    $("#dataData").val("");
+    
+    $("#ClaimFormContainer").css("display", "none");
+    $("#overlay").css("display", "none");
+    $("#loader").css("display", "flex");
 
     try
     {
@@ -360,10 +385,18 @@ App = {
     catch(e)
     {
        alert('invalid json');
+       $("#loader").css("display", "none");
     }
+
+    $("#dataData").val("");
+    $("#uriData").val("");
+    $("#KeyFormContainer").css("display", "none");
+    $("#overlay").css("display", "none");
+    $("#loader").css("display", "flex");
 
     if(!data){
       console.log("input your data!");
+      $("#loader").css("display", "none");
     }else{
       // uint256 _topic, uint256 _scheme, address issuer, bytes _signature, bytes _data, string _uri
       data = JSON.stringify(data);
@@ -374,11 +407,25 @@ App = {
       var presign = issuer + topic + data;
       var signature = web3.sha3(presign);
       var uri = $("#uriData").val();
+      $("#uriData").val("");
       
 
       var ClaimHolderInstance = App.contracts.ClaimHolder.at(App.claimHolderAddress);
 
-      ClaimHolderInstance.addClaim(topic, scheme, issuer, signature, data, uri).then(console.log);
+      ClaimHolderInstance.addClaim(topic, scheme, issuer, signature, data, uri).then((res) => {
+        console.log(res);
+        var newClaimId = res.logs[0].args.claimId;
+        var content = 
+              `<tr class="keyRow">
+                <td class="keyData">${newClaimId}</td>
+              </tr>`;
+
+            $("#claimTable").prepend(content);
+        $("#loader").css("display", "none");
+      }).catch((err) => {
+        console.log(err);
+        $("#loader").css("display", "none");
+      });
       
     }
     
