@@ -21358,6 +21358,161 @@
     "version": "0.4.25+commit.59dbf8f1.Linux.g++"
   },
   "networks": {
+    "3": {
+      "events": {
+        "0x480000bb1edad8ca1470381cc334b1917fbd51c6531f3a623ea8e0ec7e38a6e9": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "key",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "name": "purpose",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "keyType",
+              "type": "uint256"
+            }
+          ],
+          "name": "KeyAdded",
+          "type": "event",
+          "signature": "0x480000bb1edad8ca1470381cc334b1917fbd51c6531f3a623ea8e0ec7e38a6e9"
+        },
+        "0x585a4aef50f8267a92b32412b331b20f7f8b96f2245b253b9cc50dcc621d3397": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "key",
+              "type": "bytes32"
+            },
+            {
+              "indexed": true,
+              "name": "purpose",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "keyType",
+              "type": "uint256"
+            }
+          ],
+          "name": "KeyRemoved",
+          "type": "event",
+          "signature": "0x585a4aef50f8267a92b32412b331b20f7f8b96f2245b253b9cc50dcc621d3397"
+        },
+        "0x8afcfabcb00e47a53a8fc3e9f23ff47ee1926194bb1350dd007c50b412a6cee8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "executionId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "ExecutionRequested",
+          "type": "event",
+          "signature": "0x8afcfabcb00e47a53a8fc3e9f23ff47ee1926194bb1350dd007c50b412a6cee8"
+        },
+        "0xe10c49d9f7c71da23262367013434763cfdb2332267641728d25cd712c5c6a68": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "executionId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "ExecutionFailed",
+          "type": "event",
+          "signature": "0xe10c49d9f7c71da23262367013434763cfdb2332267641728d25cd712c5c6a68"
+        },
+        "0x1f920dbda597d7bf95035464170fa58d0a4b57f13a1c315ace6793b9f63688b8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "executionId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "name": "Executed",
+          "type": "event",
+          "signature": "0x1f920dbda597d7bf95035464170fa58d0a4b57f13a1c315ace6793b9f63688b8"
+        },
+        "0xb3932da477fe5d6c8ff2eafef050c0f3a1af18fc07121001482600f36f3715d8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "executionId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "approved",
+              "type": "bool"
+            }
+          ],
+          "name": "Approved",
+          "type": "event",
+          "signature": "0xb3932da477fe5d6c8ff2eafef050c0f3a1af18fc07121001482600f36f3715d8"
+        }
+      },
+      "links": {},
+      "address": "0x846308aBdC3a5287bE9d5cB845de087e56fd033D",
+      "transactionHash": "0x4e9ad17b48a20f2d1629a26946261ceb28231c7f092be630118ddbd5c158541c"
+    },
     "1547079719805": {
       "events": {
         "0x480000bb1edad8ca1470381cc334b1917fbd51c6531f3a623ea8e0ec7e38a6e9": {
@@ -21515,7 +21670,7 @@
     }
   },
   "schemaVersion": "3.0.1",
-  "updatedAt": "2019-01-10T01:38:37.998Z",
+  "updatedAt": "2019-01-10T05:30:50.473Z",
   "devdoc": {
     "methods": {}
   },
