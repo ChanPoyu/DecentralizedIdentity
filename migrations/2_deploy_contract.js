@@ -4,7 +4,7 @@ const claimHolderLibrary = artifacts.require("ClaimHolderLibrary");
 const keyHolderLibrary = artifacts.require("KeyHolderLibrary");
 const claimHolder = artifacts.require("ClaimHolder");
 const keyHolder = artifacts.require("KeyHolder");
-const claimHolderFactory = artifacts.require("ClaimHolderFactory");
+
 
 
 module.exports = function (deployer, network, accounts) 
@@ -16,14 +16,18 @@ module.exports = function (deployer, network, accounts)
     return deployer.deploy(keyHolderLibrary);
   })
   .then(() => {
-    deployer.link(keyHolderLibrary, claimHolderLibrary);
-    return deployer.deploy(claimHolderLibrary);
+    deployer.link(keyHolderLibrary, keyHolder);
+    return deployer.deploy(keyHolder);
   })
   .then(() => {
-    deployer.link(claimHolderLibrary, claimHolderFactory);
-    deployer.link(keyHolderLibrary, claimHolderFactory);
-    return deployer.deploy(claimHolderFactory);
+    deployer.link(keyHolderLibrary, claimHolderLibrary);
+    return deployer.deploy(claimHolderLibrary);
+  }).then(() => {
+    deployer.link(keyHolderLibrary, claimHolder);
+    deployer.link(claimHolderLibrary, claimHolder);
+    return deployer.deploy(claimHolder);
   });
+  
 
   // return deployer.deploy(claimHolderFactory);
 }

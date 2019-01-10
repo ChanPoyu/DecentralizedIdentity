@@ -53,14 +53,69 @@
           <div><h3>Keys</h3></div>
           <div id="addKeyBtn"><h3>Add&#43;</h3></div> 
         </div>    
-        <div id="displayKeys"></div>
+        <div id="displayKeys">
+          <table id="keyTable">
+          </table>
+        </div>
       </div>
+      
       <div id="ClaimHolder">
         <div id="claimHolderNameTag">
           <div><h3>Claims</h3></div>
           <div id="addClaimBtn"><h3>Add &#43;</h3></div>
         </div>
-        <div id="displayClaims"></div>
+        <div id="displayClaims">
+          <table id="claimTable">
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <div id="KeyFormContainer">
+      <div id="keyForm">
+        keyPurpose
+        <select name="keyPurpose" id="keyPurposeSelect">
+          <option value="1">Management</option>
+          <option value="2">Action</option>  
+        </select>
+        <br>
+        keyType
+        <select name="keyType" id="keyTypeSelect">
+          <option value="1">EDCSA</option>
+          <option value="2">RSA</option>
+        </select>
+        <br>
+        key: <input type="text" id="keyData">
+        
+        <div id="keyFormBtn">Add Key</div>
+      </div>
+    </div>
+
+    <div id="ClaimFormContainer">
+      <div id="ClaimForm">
+        topic
+        <select name="topic" id="topicSelect">
+          <option value="1">Mail</option>
+          <option value="2">Phone</option>
+        </select>
+        <br>
+        scheme
+        <select name="scheme" id="schemeSelect">
+          <option value="1">ECDSA</option>
+          <option value="2">RSA</option>
+        </select>
+        <br>
+        issuer
+        <select name="issuer" id="issuerSelect">
+          <option value="1">MySelf</option>
+        </select>
+        <br>
+        data
+        <input type="text" placeholder='ex: {"dataTitle": "data"}' id="dataData">
+        <br>
+        uri
+        <input type="text" id="uriData" value="">
+        <div id="claimFormBtn">Add Claim</div>
       </div>
     </div>
 

@@ -4,6 +4,8 @@ App = {
   account: '0x0',
   network: '',
   serverDomain: 'https://small-obi-1179.lolipop.io/',
+  claimHolderAddress: null,
+  choosedThumbnail: null,
 
   init: async function() {
     
@@ -23,11 +25,6 @@ App = {
   },
 
   initContract: function() {
-
-    $.getJSON("ClaimHolderFactory.json", function(claimHolderFac){
-      App.contracts.ClaimHolderFactory = TruffleContract(claimHolderFac);
-      App.contracts.ClaimHolderFactory.setProvider(App.web3Provider);
-    });
 
     $.getJSON("ClaimHolder.json", function(claimHolder){
       App.contracts.ClaimHolder = TruffleContract(claimHolder);
@@ -128,7 +125,10 @@ App = {
     $("#addIdBtn").click(App.handleAddIdBtn);
     $("#overlay").click(App.overlayClicked);
     $("#idFormBtn").click(App.SendIdForm);
-    $(".idThumbnail").cli
+    $("#addKeyBtn").click(App.handleAddKeyBtn);
+    $("#keyFormBtn").click(App.SendKeyForm);
+    $("#addClaimBtn").click(App.handleAddClaimBtn);
+    $("#claimFormBtn").click(App.SendClaimForm);
     // $("#sayHello").click(App.SayHello);
 
   },
@@ -141,30 +141,32 @@ App = {
   overlayClicked: function() {
     $("#overlay").css("display", "none");
     $("#IdentityFormContainer").css("display", "none");
+    $("#KeyFormContainer").css("display", "none");
+    $("#ClaimFormContainer").css("display", "none");
     $("#IdName").val("");
   },
 
   SendIdForm: function() {
 
-    var claimHolderFactoryInstance;
+
+    var claimHolderInstance;
     var name = $("#IdName").val();
+
     $("#IdName").val("");
     $("#IdentityFormContainer").css("display", "none");
     $("#overlay").css("display", "none");
+    $("#loader").css("display", "flex");
 
-    if(!name){
-      console.log("input your name!")
-      $("#errorMsg").css("display", "block");
-    }else{
-      $("#loader").css("display", "flex");
-      App.contracts.ClaimHolderFactory.deployed().then(function(instance){
-        claimHolderFactoryInstance = instance;
-        return claimHolderFactoryInstance.createClaimHolder();
-      }).then(function(result){
-        console.log("claimHolder address:" + result.receipt.logs[0].address);
-        console.log("Management key:" + result.receipt.logs[0].topics[1]);
+    App.contracts.ClaimHolder.new().then((inst) => {
+      claimHolderInstance = inst;
+      
+      if(!name){
+        console.log("input your name!")
+        $("#errorMsg").css("display", "block");
+      }else{
+        $("#loader").css("display", "flex");
 
-        var claimHolderAddress = result.receipt.logs[0].address;
+        var claimHolderAddress = claimHolderInstance.address;
         var IDdata = {
           "network": App.network,
           "ethAccount": web3.eth.coinbase,
@@ -190,30 +192,196 @@ App = {
         });
 
         $("#loader").css("display", "none");
-      }).catch(function(err){
-        console.log(err);
-        $("#loader").css("display", "none");
-      });
-    }
+      }
+
+    }).catch((err) => {
+      $("#loader").css("display", "none");
+      console.log(err);
+    });
+    
   },
 
   IdThumbnailClicked: function(e){
-    var id = e.id;
-    var url = App.serverDomain + 'getDatasbyObjectId/' + id;
+    var tempid = App.choosedThumbnail;
+    App.choosedThumbnail = e.id;
+    var url = App.serverDomain + 'getDatasbyObjectId/' + App.choosedThumbnail;
+
+    $("#" + tempid).css("background", "#fff");
+    $("#" + App.choosedThumbnail).css("background", "#ccddee");
+
+    $("#keyTable").html("");
 
     $.ajax({
       url: url,
       type: 'GET',
       success: (data) => {
-        var claimHolderAddress = data.identity.claimHolderAddr;
+        App.claimHolderAddress = data.identity.claimHolderAddr;
+        var claimHolderInstance = App.contracts.ClaimHolder.at(App.claimHolderAddress);
 
-        var claimHolderInstance = App.contracts.ClaimHolder.at(claimHolderAddress);
+        claimHolderInstance.getKeysByPurpose(1).then((res) => {
+          var key = res;
 
-        claimHolderInstance.getKeysByPurpose(1).then(res => console.log(res));
-        // console.log(claimHolderInstance);
+          for(var i = 0; i < key.length; i ++){
+            var keyPurpose;
+            var keyType;
+            var keyData = key[i];
+            
+            var content = 
+              `<tr class="keyRow">
+                <td class="keyData">${keyData}</td>
+              </tr>`;
+
+            $("#keyTable").prepend(content);
+          }
+
+          // return claimHolderInstance.getKeysByPurpose(2);
+        });
+
+        claimHolderInstance.getKeysByPurpose(2).then((res) => {
+          var key = res;
+
+          for(var i = 0; i < key.length; i ++){
+            var keyPurpose;
+            var keyType;
+            var keyData = key[i];
+            
+            var content = 
+              `<tr class="keyRow">
+                <td class="keyData">${keyData}</td>
+              </tr>`;
+
+            $("#keyTable").prepend(content);
+          }
+        });
+
+        claimHolderInstance.getClaimIdsByTopic(1).then((res) => {
+          var claim = res;
+
+          for (var i = 0; i < claim.length; i++){
+
+            var ClaimData = claim[i];
+
+            var content = 
+              `<tr class="claimRow">
+                <td class="claimData">${ClaimData}</td>
+              </tr>`;
+
+            $("#claimTable").prepend(content);
+          }
+          
+        }); 
+
+        claimHolderInstance.getClaimIdsByTopic(2).then((res) => {
+          var claim = res;
+
+          for (var i = 0; i < claim.length; i++){
+
+            var ClaimData = claim[i];
+
+            var content = 
+              `<tr class="keyRow">
+                <td class="keyData">${ClaimData}</td>
+              </tr>`;
+
+            $("#claimTable").prepend(content);
+          }
+        }); 
       }
     });
+          
+    // claimHolderInstance.getKey(keyData).then((res) => {             
+          
+    //   var keyPurposeCode = res[0][0].c[0];
+    //   var keyTypeCode = res[1].c[0];
+      
+    //   if (keyPurposeCode == 1){
+    //       keyPurpose = "Management";
+    //   }else if(keyPurposeCode == 2){
+    //       keyPurpose = "Action";
+    //   }
 
+    //   if(keyTypeCode == 1){
+    //     keyType = "ECDSA";
+    //   }else if(keyTypeCode){
+    //     keyType = "RSA";
+    //   }
+
+    // });
+
+  },
+
+  handleAddKeyBtn: function() {
+    if(!App.claimHolderAddress){
+      alert("Choose an Id!!");
+    }else{
+      $("#KeyFormContainer").css("display", "block");
+      $("#overlay").css("display", "block");  
+    }
+    
+    console.log("clicked");
+  },
+
+  SendKeyForm: function(){
+
+    var keyPurpose = parseInt($("#keyPurposeSelect").val());
+    var keyType = parseInt($("#keyTypeSelect").val());
+    var key = $("#keyData").val();
+
+    if(key == ""){
+      console.log("input keyData!");
+    }else{
+      console.log(App.claimHolderAddress);
+      var ClaimHolderInstance = App.contracts.ClaimHolder.at(App.claimHolderAddress);
+
+      ClaimHolderInstance.addKey(web3.fromAscii($("#keyData").val()), keyPurpose, keyType).then((res) => {console.log(res.logs)});
+
+    }
+
+  },
+
+  handleAddClaimBtn: function(){
+    if(!App.claimHolderAddress){
+      alert("Choose an Id!!");
+    }else{
+      $("#ClaimFormContainer").css("display", "block");
+      $("#overlay").css("display", "block");  
+    }
+    
+  },
+
+  SendClaimForm: function(){
+    
+    var data = $("#dataData").val();
+
+    try
+    {
+       var json = JSON.parse(data);
+    }
+    catch(e)
+    {
+       alert('invalid json');
+    }
+
+    if(!data){
+      console.log("input your data!");
+    }else{
+      // uint256 _topic, uint256 _scheme, address issuer, bytes _signature, bytes _data, string _uri
+      data = JSON.stringify(data);
+
+      var topic = parseInt($("#topicSelect").val());
+      var scheme = parseInt($("#schemeSelect").val());
+      var issuer = web3.eth.coinbase;
+      var presign = issuer + topic + data;
+      var signature = web3.sha3(presign);
+      var uri = $("#uriData").val();
+      
+
+      var ClaimHolderInstance = App.contracts.ClaimHolder.at(App.claimHolderAddress);
+
+      ClaimHolderInstance.addClaim(topic, scheme, issuer, signature, data, uri).then(console.log);
+      
+    }
+    
   },
 
   SayHello: function() {
