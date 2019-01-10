@@ -8,7 +8,8 @@ App = {
   choosedThumbnail: null,
 
   init: async function() {
-    
+    $("#overlay").css("display", "block");
+    $("#warningContainer").css("display", "block");
     return await App.initWeb3();
   },
 
@@ -16,10 +17,14 @@ App = {
     if (web3 !== 'undefined') {
       App.web3Provider = web3.currentProvider;
       web3 = new Web3(web3.currentProvider); 
+      $("#overlay").css("display", "none");
+      $("#warningContainer").css("display", "none");
     } else {
-        // Set the provider you want from Web3.providers
-        App.web3Provider = new Web3.providers.HttpProvider("http://localhost:8545");
-        web3 = new Web3(App.web3Provider);
+      $("#overlay").css("display", "none");
+      $("#warningContainer").css("display", "none");
+      // Set the provider you want from Web3.providers
+      App.web3Provider = new Web3.providers.HttpProvider("http://localhost:8545");
+      web3 = new Web3(App.web3Provider);
     }
     return App.initContract();
   },

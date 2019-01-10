@@ -9,6 +9,27 @@ p {
 	margin: 0;
 	font-size: 20px;
 }
+
+#warningContainer {
+	display: block;
+	position: absolute;
+	top: 40%;
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+}
+
+#warningMessageBox{
+	display: flex;
+	width: 80%;
+	margin: auto;
+	align-items: center;
+}
+#warningMessage, #warningMessage>a{
+	font-size: 50px;
+	color: #add;
+}
+
 #IdentityFormContainer {
 	display: none;
 	position: absolute;
